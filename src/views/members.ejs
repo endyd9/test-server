@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <table border="1">
+        <tr>
+            <td>
+                이름
+            </td>
+            <td>
+                등급
+            </td>
+            <td>
+                나이
+            </td>
+            <td>
+                직업
+            </td>
+            <td>
+                수정 | 삭제
+            </td>
+
+        </tr>
+        <% memberList.forEach(function(result) { %>
+
+            <tr>
+                <td>
+                    <%=result.name%>
+                </td>
+                <td>
+                    <%=result.grade%>
+                </td>
+                <td>
+                    <%=result.age%>
+                </td>
+                <td>
+                    <%=result.job%>
+                </td>
+                <td>
+                    <button type="button" class="modi">✍️</button>
+                    |
+                    <button type="button" class="delete">❌</button>
+                </td>
+            </tr>
+            <% }) %>
+    </table>
+    <a href="/">홈으로</a>
+    <a href="/insertMember">등록으로</a>
+
+    <script>
+        const members = document.querySelector("table")
+        const deleteBtns = document.querySelectorAll(".delete");
+        const modiBtns = document.querySelectorAll(".modi")
+        let cnt = 1
+
+
+        const Delete = async (event) => {
+            const { target: { id }
+            } = event;
+            const name = members.rows[id].cells[0].innerText
+
+            const deletePlz = await fetch("/deleteMember", {
+                method: "post",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    name,
+                })
+            })
+            if (deletePlz.status === 201) {
+                window.location.reload()
+            } else {
+                alert("삭제 실패!")
+            }
+        }
+        const Modi = async (event) => {
+            const { target: { id }
+            } = event;
+            const name = members.rows[id].cells[0].innerText
+            const grade = members.rows[id].cells[1].innerText
+            const age = members.rows[id].cells[2].innerText
+            const job = members.rows[id].cells[3].innerText
+
+            const goToModi = await fetch("/goToModi", {
+                method: "post",
+                headers: {
+                    "Content-type": "application/json",
+                },
+                body: JSON.stringify({
+                    name,
+                    grade,
+                    age,
+                    job
+                })
+            })
+            if (goToModi.status === 200) {
+                const form = document.createElement("form");
+                form.setAttribute("method", "get")
+                form.setAttribute("action", "/memberModi")
+                document.body.appendChild(form)
+                form.submit();
+            }
+
+        }
+
+        deleteBtns.forEach((btn) => {
+            btn.id = `${cnt}`
+            cnt += 1
+            btn.addEventListener("click", Delete)
+        })
+        cnt = 1
+        modiBtns.forEach((btn) => {
+            btn.id = `${cnt}`
+            cnt += 1
+            btn.addEventListener("click", Modi)
+        })
+
+    </script>
+</body>
+
+</html>

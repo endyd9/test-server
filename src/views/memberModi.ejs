@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form action="/memberModi" method="post">
+        이름 : <input type="text" name="name" value="<%=name%>" readonly><br>
+        등급 : <input type="text" name="grade" placeholder="<%=grade%>"><br>
+        나이 : <input type="text" name="age" placeholder="<%=age%>"><br>
+        직업 : <input type="text" name="job" placeholder="<%=job%>"><br>
+        <button>수정</button>
+    </form>
+</body>
+<script>
+    const inputs = document.querySelectorAll("input");
+    const button = document.querySelector("button");
+
+    const submitChk = () => {
+        inputs.forEach((input) => {
+            if (input.value === '') {
+                input.value = input.placeholder
+            }
+        })
+    }
+    button.addEventListener("mousedown", submitChk)
+
+
+</script>
+
+</html>
